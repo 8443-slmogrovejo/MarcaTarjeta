@@ -14,7 +14,7 @@ import { TarjetaRepository } from './repositories/tarjeta.repository';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: 'postgres',
+      password: 'SafetyCar16',
       database: 'marca_tarjeta',
       entities: [Tarjeta],
       synchronize: true, // Solo usar en desarrollo

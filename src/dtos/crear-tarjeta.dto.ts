@@ -1,7 +1,11 @@
 import { IsNotEmpty, IsString, Length, IsEmail, Matches } from 'class-validator';
 
 export class CrearTarjetaDto {
-    codTarjeta?: string;
+
+    @IsNotEmpty({ message: 'El Codigo Tarjeta del banco es requerido' })
+    @IsString()
+    @Length(10, 10, { message: 'El Codigo Tarjeta debe tener 10 caracteres' })
+    codTarjeta: string;
 
     @IsNotEmpty({ message: 'El SWIFT del banco es requerido' })
     @IsString()

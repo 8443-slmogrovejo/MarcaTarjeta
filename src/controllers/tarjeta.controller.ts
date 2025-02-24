@@ -63,19 +63,21 @@ export class TarjetaController {
     @Put(':codTarjeta')
     async actualizar(
         @Param('codTarjeta') codTarjeta: string,
-        @Body() estado: string
+        @Body('estado') estado: string
     ): Promise<Tarjeta> {
         try {
             const tarjeta = await this.servicio.actualizar({ codTarjeta, estado });
             this.logger.log(`Se actualizó el estado de la tarjeta ${codTarjeta}`);
             return tarjeta;
         } catch (error) {
+            this.logger.error(`Error al actualizar la tarjeta: ${error.message}`);
             if (error.name === 'NotFoundException') {
-                this.logger.error(`No se encontró la tarjeta con código: ${codTarjeta}`);
                 throw new HttpException('Tarjeta no encontrada', HttpStatus.NOT_FOUND);
             }
-            this.logger.error('Error al actualizar la tarjeta', error);
-            throw new HttpException('Error al actualizar la tarjeta', HttpStatus.BAD_REQUEST);
+            throw new HttpException(
+                `Error al actualizar la tarjeta: ${error.message}`, 
+                HttpStatus.BAD_REQUEST
+            );
         }
     }
 

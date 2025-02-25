@@ -6,6 +6,7 @@ import { Tarjeta } from './entities/tarjeta.entity';
 import { TarjetaService } from './services/tarjeta.service';
 import { TarjetaController } from './controllers/tarjeta.controller';
 import { TarjetaRepository } from './repositories/tarjeta.repository';
+import { EncryptionService } from './services/encryption.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { TarjetaRepository } from './repositories/tarjeta.repository';
     TypeOrmModule.forFeature([Tarjeta]),
   ],
   controllers: [AppController, TarjetaController],
-  providers: [AppService, TarjetaService, TarjetaRepository],
+  providers: [AppService, TarjetaService, TarjetaRepository, EncryptionService],
 })
 export class AppModule {}

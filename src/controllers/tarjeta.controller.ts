@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, HttpStatus, HttpException } from '@nestjs/common';
 import { TarjetaService } from '../services/tarjeta.service';
 import { CrearTarjetaDto } from '../dtos/crear-tarjeta.dto';
+import { ValidarTarjetaDto } from '../dtos/validar-tarjeta.dto';
 import { Tarjeta } from '../entities/tarjeta.entity';
 import { Logger } from '@nestjs/common';
 
@@ -48,6 +49,18 @@ export class TarjetaController {
         }
     }
 
+    @Get('numero/:numeroTarjeta/swift')
+    async obtenerSwiftBanco(@Param('numeroTarjeta') numeroTarjeta: string): Promise<{ swiftBanco: string }> {
+        try {
+            const resultado = await this.servicio.obtenerSwiftBancoPorNumeroTarjeta(numeroTarjeta);
+            this.logger.log(`Se encontró el SWIFT del banco para la tarjeta: ${numeroTarjeta}`);
+            return resultado;
+        } catch (error) {
+            this.logger.error(`Error al obtener el SWIFT del banco para la tarjeta: ${numeroTarjeta}`);
+            throw new HttpException('Tarjeta no encontrada', HttpStatus.NOT_FOUND);
+        }
+    }
+
     @Post()
     async crear(@Body() dto: CrearTarjetaDto): Promise<Tarjeta> {
         try {
@@ -89,6 +102,24 @@ export class TarjetaController {
         } catch (error) {
             this.logger.error(`No se encontró la tarjeta con código: ${codTarjeta}`);
             throw new HttpException('Tarjeta no encontrada', HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Post('validar')
+    async validarTarjeta(@Body() dto: ValidarTarjetaDto): Promise<{ esValida: boolean, mensaje: string }> {
+        try {
+            const resultado = await this.servicio.validarTarjeta(dto);
+            this.logger.log(`Validación de tarjeta ${dto.numeroTarjeta}: ${resultado.mensaje}`);
+            return resultado;
+        } catch (error) {
+            this.logger.error(`Error al validar la tarjeta: ${error.message}`);
+            if (error.name === 'NotFoundException') {
+                throw new HttpException('Tarjeta no encontrada', HttpStatus.NOT_FOUND);
+            }
+            throw new HttpException(
+                'Error al validar la tarjeta', 
+                HttpStatus.BAD_REQUEST
+            );
         }
     }
 } 

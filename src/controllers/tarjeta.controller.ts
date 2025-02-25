@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Body, Param, HttpStatus, HttpExcept
 import { TarjetaService } from '../services/tarjeta.service';
 import { CrearTarjetaDto } from '../dtos/crear-tarjeta.dto';
 import { ValidarTarjetaDto } from '../dtos/validar-tarjeta.dto';
+import { ActualizarTarjetaDto } from '../dtos/actualizar-tarjeta.dto';
 import { Tarjeta } from '../entities/tarjeta.entity';
 import { Logger } from '@nestjs/common';
 
@@ -73,14 +74,17 @@ export class TarjetaController {
         }
     }
 
-    @Put(':codTarjeta')
+    @Put('numero/:numeroTarjeta')
     async actualizar(
-        @Param('codTarjeta') codTarjeta: string,
-        @Body('estado') estado: string
+        @Param('numeroTarjeta') numeroTarjeta: string,
+        @Body() actualizarDto: Partial<ActualizarTarjetaDto>
     ): Promise<Tarjeta> {
         try {
-            const tarjeta = await this.servicio.actualizar({ codTarjeta, estado });
-            this.logger.log(`Se actualizó el estado de la tarjeta ${codTarjeta}`);
+            const tarjeta = await this.servicio.actualizar({ 
+                numeroTarjeta,
+                ...actualizarDto
+            });
+            this.logger.log(`Se actualizó la tarjeta ${numeroTarjeta}`);
             return tarjeta;
         } catch (error) {
             this.logger.error(`Error al actualizar la tarjeta: ${error.message}`);

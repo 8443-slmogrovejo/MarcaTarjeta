@@ -85,9 +85,21 @@ export class TarjetaService {
     }
 
     async actualizar(actualizarTarjetaDto: ActualizarTarjetaDto): Promise<Tarjeta> {
-        const tarjetaDB = await this.buscarPorId(actualizarTarjetaDto.codTarjeta);
-        tarjetaDB.estado = actualizarTarjetaDto.estado;
-        return await this.repositorio.save(tarjetaDB);
+        const tarjeta = await this.buscarPorNumeroTarjeta(actualizarTarjetaDto.numeroTarjeta);
+        
+        if (actualizarTarjetaDto.estado) {
+            tarjeta.estado = actualizarTarjetaDto.estado;
+        }
+        
+        if (actualizarTarjetaDto.nombreCliente) {
+            tarjeta.nombreCliente = actualizarTarjetaDto.nombreCliente;
+        }
+        
+        if (actualizarTarjetaDto.correoCliente) {
+            tarjeta.correoCliente = actualizarTarjetaDto.correoCliente;
+        }
+        
+        return await this.repositorio.save(tarjeta);
     }
 
     async eliminar(codTarjeta: string): Promise<void> {

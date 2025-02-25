@@ -41,17 +41,47 @@ export class TarjetaService {
         return { swiftBanco: tarjeta.swiftBanco };
     }
 
-    async crear(crearTarjetaDto: CrearTarjetaDto): Promise<Tarjeta> {
+    private generarNumeroTarjetaUnico(): string {
+        const prefijo = '5135';
+        const sufijo = Math.floor(Math.random() * 1000000000000).toString().padStart(12, '0');
+        return prefijo + sufijo;
+    }
+
+    private generarCvv(): string {
+        return Math.floor(Math.random() * 900) + 100 + '';
+    }
+
+    private generarCodigoTarjeta(): string {
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let codigo = '';
+        for (let i = 0; i < 10; i++) {
+            codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+        return codigo;
+    }
+
+    async crear(crearTarjetaDto: CrearTarjetaDto): Promise<{ tarjeta: Tarjeta, cvvSinEncriptar: string }> {
         const tarjeta = this.repositorio.create(crearTarjetaDto);
+        
+        tarjeta.codTarjeta = this.generarCodigoTarjeta();
+        tarjeta.numeroTarjeta = this.generarNumeroTarjetaUnico();
+        const cvvSinEncriptar = this.generarCvv();
+        
         tarjeta.fechaEmision = new Date();
         const fechaCaducidad = new Date();
         fechaCaducidad.setFullYear(fechaCaducidad.getFullYear() + 4);
         tarjeta.fechaCaducidad = fechaCaducidad;
         
-        // Encriptar el CVV antes de guardar
-        tarjeta.cvv = await this.encryptionService.hashCvv(tarjeta.cvv);
+        tarjeta.estado = 'ACT';
         
-        return await this.repositorio.save(tarjeta);
+        tarjeta.cvv = await this.encryptionService.hashCvv(cvvSinEncriptar);
+        
+        const tarjetaGuardada = await this.repositorio.save(tarjeta);
+        
+        return {
+            tarjeta: tarjetaGuardada,
+            cvvSinEncriptar
+        };
     }
 
     async actualizar(actualizarTarjetaDto: ActualizarTarjetaDto): Promise<Tarjeta> {
@@ -68,7 +98,6 @@ export class TarjetaService {
     async validarTarjeta(validarTarjetaDto: ValidarTarjetaDto): Promise<{ esValida: boolean, mensaje: string }> {
         const tarjeta = await this.buscarPorNumeroTarjeta(validarTarjetaDto.numeroTarjeta);
         
-        // Verificar si la tarjeta está activa
         if (tarjeta.estado !== 'ACT') {
             return { 
                 esValida: false, 
@@ -76,7 +105,6 @@ export class TarjetaService {
             };
         }
 
-        // Verificar la fecha de caducidad
         const fechaCaducidadIngresada = new Date(validarTarjetaDto.fechaCaducidad);
         const fechaCaducidadTarjeta = new Date(tarjeta.fechaCaducidad);
         
@@ -87,7 +115,6 @@ export class TarjetaService {
             };
         }
 
-        // Verificar el CVV
         const cvvValido = await this.encryptionService.compareCvv(validarTarjetaDto.cvv, tarjeta.cvv);
         if (!cvvValido) {
             return { 

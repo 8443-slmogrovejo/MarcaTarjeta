@@ -1,12 +1,6 @@
-import { IsNotEmpty, IsString, Length, IsEmail, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, Length, IsEmail } from 'class-validator';
 
 export class CrearTarjetaDto {
-
-    @IsNotEmpty({ message: 'El Codigo Tarjeta del banco es requerido' })
-    @IsString()
-    @Length(10, 10, { message: 'El Codigo Tarjeta debe tener 10 caracteres' })
-    codTarjeta: string;
-
     @IsNotEmpty({ message: 'El SWIFT del banco es requerido' })
     @IsString()
     @Length(8, 11, { message: 'El SWIFT debe tener entre 8 y 11 caracteres' })
@@ -41,22 +35,4 @@ export class CrearTarjetaDto {
     @IsString()
     @Length(1, 40, { message: 'El ID del cliente no debe exceder 40 caracteres' })
     idClienteBanco: string;
-
-    @IsNotEmpty({ message: 'El número de tarjeta es requerido' })
-    @Matches(/^[0-9]{16}$/, { message: 'El número de tarjeta debe tener 16 dígitos numéricos' })
-    numeroTarjeta: string;
-
-    fechaEmision?: Date;
-    
-    fechaCaducidad?: Date;
-
-    @IsNotEmpty({ message: 'El CVV es requerido' })
-    @IsString()
-    @Length(1, 100, { message: 'El CVV no debe exceder 100 caracteres' })
-    cvv: string;
-
-    @IsNotEmpty({ message: 'El estado es requerido' })
-    @Matches(/^(ACT|INA|BLO|SUS)$/, { message: 'El estado debe ser ACT, INA, BLO o SUS' })
-    @Length(1, 3, { message: 'El estado no debe exceder 3 caracteres' })
-    estado: string;
 } 

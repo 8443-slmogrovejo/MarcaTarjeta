@@ -62,11 +62,11 @@ export class TarjetaController {
     }
 
     @Post()
-    async crear(@Body() dto: CrearTarjetaDto): Promise<Tarjeta> {
+    async crear(@Body() dto: CrearTarjetaDto): Promise<{ tarjeta: Tarjeta, cvvSinEncriptar: string }> {
         try {
-            const tarjeta = await this.servicio.crear(dto);
-            this.logger.log(`Se creó la tarjeta con código: ${tarjeta.codTarjeta}`);
-            return tarjeta;
+            const resultado = await this.servicio.crear(dto);
+            this.logger.log(`Se creó la tarjeta con código: ${resultado.tarjeta.codTarjeta}`);
+            return resultado;
         } catch (error) {
             this.logger.error('Error al crear la tarjeta', error);
             throw new HttpException('Error al crear la tarjeta', HttpStatus.BAD_REQUEST);

@@ -18,7 +18,7 @@ import { EncryptionService } from './services/encryption.service';
       password: 'SafetyCar16',
       database: 'marca_tarjeta',
       entities: [Tarjeta],
-      synchronize: true, // Solo usar en desarrollo
+      synchronize: true,
     }),
     TypeOrmModule.forFeature([Tarjeta]),
   ],

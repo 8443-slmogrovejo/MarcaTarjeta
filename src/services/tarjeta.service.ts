@@ -6,6 +6,8 @@ import { ActualizarTarjetaDto } from '../dtos/actualizar-tarjeta.dto';
 import { ValidarTarjetaDto } from '../dtos/validar-tarjeta.dto';
 import { TarjetaRepository } from '../repositories/tarjeta.repository';
 import { EncryptionService } from './encryption.service';
+import { BancoService } from './banco.service';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class TarjetaService {
@@ -13,7 +15,8 @@ export class TarjetaService {
 
     constructor(
         private readonly repositorio: TarjetaRepository,
-        private readonly encryptionService: EncryptionService
+        private readonly encryptionService: EncryptionService,
+        private readonly bancoService: BancoService
     ) {}
 
     async buscarTodos(): Promise<Tarjeta[]> {
@@ -61,6 +64,11 @@ export class TarjetaService {
     }
 
     async crear(crearTarjetaDto: CrearTarjetaDto): Promise<{ tarjeta: Tarjeta, cvvSinEncriptar: string }> {
+        const bancoValido = await this.bancoService.validarSwiftBanco(crearTarjetaDto.swiftBanco);
+        if (!bancoValido) {
+            throw new HttpException('El banco no está registrado', HttpStatus.BAD_REQUEST);
+        }
+
         const tarjeta = this.repositorio.create(crearTarjetaDto);
         
         tarjeta.codTarjeta = this.generarCodigoTarjeta();

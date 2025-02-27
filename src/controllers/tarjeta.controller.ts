@@ -66,6 +66,7 @@ export class TarjetaController {
     async crear(@Body() dto: CrearTarjetaDto): Promise<{ tarjeta: Tarjeta, cvvSinEncriptar: string }> {
         try {
             const resultado = await this.servicio.crear(dto);
+            // consulte a microservicio de banco
             this.logger.log(`Se creó la tarjeta con código: ${resultado.tarjeta.codTarjeta}`);
             return resultado;
         } catch (error) {

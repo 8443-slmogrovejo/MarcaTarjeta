@@ -2,6 +2,13 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 
+interface BancoResponse {
+    swiftBanco: string;
+    nombre: string;
+    pais: string;
+    bin: string;
+}
+
 @Injectable()
 export class BancoService {
     private readonly bancoServiceUrl: string;
@@ -12,8 +19,8 @@ export class BancoService {
 
     async validarSwiftBanco(swiftBanco: string): Promise<boolean> {
         try {
-            const response = await axios.get(`${this.bancoServiceUrl}/api/v1/banco/${swiftBanco}`);
-            return response.data === true;
+            const response = await axios.get<BancoResponse>(`${this.bancoServiceUrl}/api/v1/bancos/${swiftBanco}`);
+            return response.data && response.data.swiftBanco === swiftBanco;
         } catch (error) {
             if (error.response?.status === 404) {
                 return false;

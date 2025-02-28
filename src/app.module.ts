@@ -16,10 +16,10 @@ import { BancoService } from './services/banco.service';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: 'mariadb',
       host: 'localhost',
-      port: 5432,
-      username: 'postgres',
+      port: 3306,
+      username: 'root',
       password: 'SafetyCar16',
       database: 'marca_tarjeta',
       entities: [Tarjeta],

@@ -121,7 +121,7 @@ export class TarjetaService {
         if (tarjeta.estado !== 'ACT') {
             return { 
                 esValida: false, 
-                mensaje: 'La tarjeta no está activa' 
+                mensaje: 'Datos de la tarjeta incorrectos' 
             };
         }
 

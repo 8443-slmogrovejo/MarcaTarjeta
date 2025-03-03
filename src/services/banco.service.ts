@@ -19,7 +19,10 @@ export class BancoService {
 
     async validarSwiftBanco(swiftBanco: string): Promise<boolean> {
         try {
+            console.log('swiftBanco', swiftBanco);
+            console.log(`${this.bancoServiceUrl}/api/v1/bancos/${swiftBanco}`);
             const response = await axios.get<BancoResponse>(`${this.bancoServiceUrl}/api/v1/bancos/${swiftBanco}`);
+            console.log('response', response);
             return response.data && response.data.swiftBanco === swiftBanco;
         } catch (error) {
             if (error.response?.status === 404) {

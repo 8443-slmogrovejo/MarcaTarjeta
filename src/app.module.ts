@@ -23,7 +23,7 @@ import { BancoService } from './services/banco.service';
       password: 'SafetyCar16',
       database: 'marca_tarjeta',
       entities: [Tarjeta],
-      synchronize: true,
+      synchronize: false,
     }),
     TypeOrmModule.forFeature([Tarjeta]),
   ],

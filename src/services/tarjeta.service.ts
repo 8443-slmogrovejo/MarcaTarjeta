@@ -125,10 +125,25 @@ export class TarjetaService {
             };
         }
 
-        const fechaCaducidadIngresada = new Date(validarTarjetaDto.fechaCaducidad);
-        const fechaCaducidadTarjeta = new Date(tarjeta.fechaCaducidad);
+        const [mes, anio] = validarTarjetaDto.fechaCaducidad.split('/');
+        const mesIngresado = parseInt(mes) - 1;
+        const anioIngresado = 2000 + parseInt(anio);
+        console.log('mesIngresado', mesIngresado);
+        console.log('anioIngresado', anioIngresado);
         
-        if (fechaCaducidadIngresada.getTime() !== fechaCaducidadTarjeta.getTime()) {
+        const fechaCaducidadTarjeta = new Date(tarjeta.fechaCaducidad);
+        const mesTarjeta = fechaCaducidadTarjeta.getMonth();
+        const anioTarjeta = fechaCaducidadTarjeta.getFullYear();
+        console.log('mesTarjeta', mesTarjeta);
+        console.log('anioTarjeta', anioTarjeta);
+
+        const mesAnioIguales = 
+            mesIngresado === mesTarjeta && 
+            anioIngresado === anioTarjeta;
+
+        console.log('mesAnioIguales', mesAnioIguales);
+        
+        if (!mesAnioIguales) {
             return { 
                 esValida: false, 
                 mensaje: 'Datos de la tarjeta incorrectos' 

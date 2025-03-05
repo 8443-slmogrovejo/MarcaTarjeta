@@ -12,6 +12,7 @@ export class ValidarTarjetaDto {
     cvv: string;
 
     @IsNotEmpty({ message: 'La fecha de caducidad es requerida' })
-    @IsDateString({}, { message: 'La fecha de caducidad debe ser una fecha válida' })
+    @IsString()
+    @Length(5, 5, { message: 'La fecha de caducidad debe tener formato MM/AA' })
     fechaCaducidad: string;
 } 

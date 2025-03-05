@@ -79,10 +79,13 @@ describe('TarjetaService', () => {
             const validarTarjetaDto = {
                 numeroTarjeta: '5135123456789012',
                 cvv: '123',
-                fechaCaducidad: '2028-02-24',
+                fechaCaducidad: '02/28',
             };
 
-            mockRepository.findByNumeroTarjeta.mockResolvedValue(mockTarjeta);
+            mockRepository.findByNumeroTarjeta.mockResolvedValue({
+                ...mockTarjeta,
+                fechaCaducidad: new Date('2028-02-24')
+            });
             mockEncryptionService.compareCvv.mockResolvedValue(true);
 
             const resultado = await service.validarTarjeta(validarTarjetaDto);
@@ -98,7 +101,7 @@ describe('TarjetaService', () => {
             const validarTarjetaDto = {
                 numeroTarjeta: '5135123456789012',
                 cvv: '123',
-                fechaCaducidad: '2028-02-24',
+                fechaCaducidad: '02/28',
             };
 
             mockRepository.findByNumeroTarjeta.mockResolvedValue(tarjetaInactiva);
@@ -115,10 +118,13 @@ describe('TarjetaService', () => {
             const validarTarjetaDto = {
                 numeroTarjeta: '5135123456789012',
                 cvv: '123',
-                fechaCaducidad: '2028-02-24',
+                fechaCaducidad: '02/28',
             };
 
-            mockRepository.findByNumeroTarjeta.mockResolvedValue(mockTarjeta);
+            mockRepository.findByNumeroTarjeta.mockResolvedValue({
+                ...mockTarjeta,
+                fechaCaducidad: new Date('2028-02-24')
+            });
             mockEncryptionService.compareCvv.mockResolvedValue(false);
 
             const resultado = await service.validarTarjeta(validarTarjetaDto);
@@ -133,10 +139,33 @@ describe('TarjetaService', () => {
             const validarTarjetaDto = {
                 numeroTarjeta: '5135123456789012',
                 cvv: '123',
-                fechaCaducidad: '2029-02-24',
+                fechaCaducidad: '03/28',
             };
 
-            mockRepository.findByNumeroTarjeta.mockResolvedValue(mockTarjeta);
+            mockRepository.findByNumeroTarjeta.mockResolvedValue({
+                ...mockTarjeta,
+                fechaCaducidad: new Date('2028-02-24')
+            });
+
+            const resultado = await service.validarTarjeta(validarTarjetaDto);
+
+            expect(resultado).toEqual({
+                esValida: false,
+                mensaje: 'Datos de la tarjeta incorrectos'
+            });
+        });
+
+        it('debería retornar inválido cuando el año de caducidad no coincide', async () => {
+            const validarTarjetaDto = {
+                numeroTarjeta: '5135123456789012',
+                cvv: '123',
+                fechaCaducidad: '02/29',
+            };
+
+            mockRepository.findByNumeroTarjeta.mockResolvedValue({
+                ...mockTarjeta,
+                fechaCaducidad: new Date('2028-02-24')
+            });
 
             const resultado = await service.validarTarjeta(validarTarjetaDto);
 

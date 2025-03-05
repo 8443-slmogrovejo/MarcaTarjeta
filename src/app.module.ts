@@ -17,10 +17,10 @@ import { BancoService } from './services/banco.service';
     }),
     TypeOrmModule.forRoot({
       type: 'mariadb',
-      host: 'localhost',
+      host: 'ms-mariadb.ct6s2uqkmna8.us-east-2.rds.amazonaws.com',
       port: 3306,
-      username: 'root',
-      password: 'SafetyCar16',
+      username: 'admin',
+      password: 'password123',
       database: 'marca_tarjeta',
       entities: [Tarjeta],
       synchronize: false,

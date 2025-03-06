@@ -64,10 +64,10 @@ export class TarjetaService {
     }
 
     async crear(crearTarjetaDto: CrearTarjetaDto): Promise<{ tarjeta: Tarjeta, cvvSinEncriptar: string }> {
-        const bancoValido = await this.bancoService.validarSwiftBanco(crearTarjetaDto.swiftBanco);
+        /*const bancoValido = await this.bancoService.validarSwiftBanco(crearTarjetaDto.swiftBanco);
         if (!bancoValido) {
             throw new HttpException('El banco no está registrado', HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
         const tarjeta = this.repositorio.create(crearTarjetaDto);
         

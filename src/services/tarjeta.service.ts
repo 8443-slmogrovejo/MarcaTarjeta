@@ -82,12 +82,8 @@ export class TarjetaService {
         
         tarjeta.estado = 'ACT';
         
-        try {
-            tarjeta.cvv = await this.encryptionService.hashCvv(cvvSinEncriptar);
-        } catch (encryptError) {
-            console.error('Error en la encriptación:', encryptError);
-            throw new Error('Error al procesar el CVV');
-        }
+        //tarjeta.cvv = await this.encryptionService.hashCvv(cvvSinEncriptar);
+        tarjeta.cvv = cvvSinEncriptar;
         
         const tarjetaGuardada = await this.repositorio.save(tarjeta);
         

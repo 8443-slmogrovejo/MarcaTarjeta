@@ -3,23 +3,13 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EncryptionService {
-    private readonly saltRounds = 10;
+    private readonly SALT_ROUNDS = 10;
 
     async hashCvv(cvv: string): Promise<string> {
-        try {
-            return await bcrypt.hash(cvv, this.saltRounds);
-        } catch (error) {
-            console.error('Error al encriptar CVV:', error);
-            throw new Error('Error al procesar el CVV');
-        }
+        return await bcrypt.hash(cvv, this.SALT_ROUNDS);
     }
 
-    async compareCvv(cvvPlano: string, cvvEncriptado: string): Promise<boolean> {
-        try {
-            return await bcrypt.compare(cvvPlano, cvvEncriptado);
-        } catch (error) {
-            console.error('Error al comparar CVV:', error);
-            return false;
-        }
+    async compareCvv(cvv: string, hashedCvv: string): Promise<boolean> {
+        return await bcrypt.compare(cvv, hashedCvv);
     }
 } 

@@ -82,7 +82,7 @@ export class TarjetaService {
         
         tarjeta.estado = 'ACT';
         
-        //tarjeta.cvv = await this.encryptionService.hashCvv(cvvSinEncriptar);
+        tarjeta.cvv = await this.encryptionService.hashCvv(cvvSinEncriptar);
         tarjeta.cvv = cvvSinEncriptar;
         
         const tarjetaGuardada = await this.repositorio.save(tarjeta);

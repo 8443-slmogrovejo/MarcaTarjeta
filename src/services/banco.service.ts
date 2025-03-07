@@ -21,7 +21,7 @@ export class BancoService {
         try {
             console.log('swiftBanco', swiftBanco);
             console.log(`${this.bancoServiceUrl}api/v1/bancos/${swiftBanco}`);
-            const response = await axios.get<BancoResponse>(`${this.bancoServiceUrl}/api/v1/bancos/${swiftBanco}`);
+            const response = await axios.get<BancoResponse>(`${this.bancoServiceUrl}api/v1/bancos/${swiftBanco}`);
             console.log('response', response);
             return response.data && response.data.swiftBanco === swiftBanco;
         } catch (error) {

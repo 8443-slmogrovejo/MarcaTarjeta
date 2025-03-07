@@ -8,7 +8,7 @@ export class ValidarTarjetaDto {
 
     @IsNotEmpty({ message: 'El CVV es requerido' })
     @IsString()
-    @Length(3, 4, { message: 'El CVV debe tener entre 3 y 4 dígitos' })
+    @Length(3, 3, { message: 'El CVV debe tener 3 dígitos' })
     cvv: string;
 
     @IsNotEmpty({ message: 'La fecha de caducidad es requerida' })
